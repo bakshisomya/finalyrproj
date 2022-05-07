@@ -3,6 +3,7 @@ import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import img from "../assets/images/Group 52.png";
 import reviewcard from "../assets/images/Group 57.png"
+import Footer from './Footer/Footer.js'
 
 function Home() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function Home() {
           A platform for <br />
           <span className="diff-font">hassle free</span> Appointments
         </h1>
+      </a>
         <p>
           Schedule your appointments at home
           <br />
@@ -34,10 +36,7 @@ function Home() {
           <br />
           salons and clinics in this pandemic times.
         </p>
-        <button className="custom-btn" onClick={() => navigate("/register")}>
-          Get Started
-        </button>
-      </a>
+        <button className='custom-btn' onClick={() => navigate("/register")}>Get Started</button>
         <img src={img} alt="" />
       </div>
       <div className="our-services">
@@ -101,13 +100,7 @@ function Home() {
         </div>
       </div>
       </div>
-      <footer>
-      <h6>
-          Virtual Lobby
-          <span style={{ color: "#73A9DF", fontSize: "34px" }}>.</span>
-        </h6>
-        <h6 id='faded'>all rights reserved @ 2022</h6>
-      </footer>
+      <Footer/>
     </div>
   );
 }

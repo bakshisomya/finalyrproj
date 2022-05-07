@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import "./Login.css";
 
 function Login() {
   const [showPassword, setshowPassword] = useState(false);
+  const navigate = useNavigate();
+  const onSubmitHandler = ()=>{
+    navigate('/dashboard');
+  }
   return (
     <div className="login-parent">
       <div id="image-section">
@@ -26,7 +30,7 @@ function Login() {
             Welcome back! <br />
             Enter your details to login to your account.
           </p>
-          <form action="">
+          <form onSubmit={onSubmitHandler} action="">
             <div className="mb-4">
               <label className="form-label">Email address</label>
               <input
@@ -63,7 +67,7 @@ function Login() {
                 Keep me signed in
               </label>
             </div>
-            <button className="mb-5">Log In</button>
+            <button type="submit" className="mb-5">Log In</button>
             <Link to="/register">
               Don't have an account?{" "}
               <span style={{ color: "#73A9DF" }}> Signup </span>{" "}

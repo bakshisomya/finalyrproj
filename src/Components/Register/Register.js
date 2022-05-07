@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import "./Register.css";
 import img from "../../assets/images/Group 47.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 function Register() {
   const [tripType, setTripType] = useState("Customer");
   const [showPassword, setshowPassword] = useState(false);
   const [showCPassword, setshowCPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const onSubmitHandler = ()=>{
+    navigate("/dashboard");
+  }
 
   return (
     <div className="register-parent d-flex">
@@ -36,7 +42,7 @@ function Register() {
       <div id="form-section">
         <div id="form-body">
           <h2>Sign Up</h2>
-          <form action="" className="">
+          <form onSubmit={onSubmitHandler} action="" className="">
             <div className="one d-flex">
               <div className="first-half w-50 m-2">
                 <div className="mb-3">
@@ -198,7 +204,7 @@ function Register() {
                 </div>
               </div>
             </div>
-            <button className="mb-4">Register</button>
+            <button type="submit" className="mb-4">Register</button>
           </form>
         </div>
       </div>
