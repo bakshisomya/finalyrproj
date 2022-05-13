@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Navigate } from 'react-router-dom';
 import { isLogin } from '../Utils';
 
 const PrivateRoute = ({component: Component, ...rest}) => {
@@ -10,7 +10,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
         <Route {...rest} render={props => (
             isLogin() ?
                 <Component {...props} />
-            : <Redirect to="/signin" />
+            : <Navigate to="/signin" />
         )} />
     );
 };

@@ -2,16 +2,72 @@ import React, { useState } from "react";
 import "./Register.css";
 import img from "../../assets/images/Group 47.png";
 import { Link, useNavigate } from "react-router-dom";
+import instance from "../Common/Baseurl";
 
 function Register() {
-  const [tripType, setTripType] = useState("Customer");
+  const [loading, setloading] = useState(false);
   const [showPassword, setshowPassword] = useState(false);
   const [showCPassword, setshowCPassword] = useState(false);
-  const navigate = useNavigate();
 
-  const onSubmitHandler = ()=>{
+  const [tripType, setTripType] = useState("C");
+  const [username, setusername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
+  const [pincode, setpincode] = useState("");
+  const [spincode, setspincode] = useState("");
+  const [shopname, setshopname] = useState("");
+  const [shopaddress, setshopaddress] = useState("");
+  const [dropValue, setdropValue] = useState("");
+
+  const navigate = useNavigate();
+  const getDropvalue = (e) => {
+    const changeValue = e.target.value;
+    setdropValue(changeValue);
+  };
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    setloading(true);
+    if(tripType === "C"){
+      instance.post("/register", {
+        username:username,
+        password: password,
+        email: email,
+        pincode : pincode,
+        contact : contact,
+        utype : tripType
+      })
+      .then(async (response) => {
+
+      })
+      .catch(async (err) => {
+
+      })
+    }
+    else{
+      instance.post("/register", {
+        username:username,
+        shopname:shopname,
+        password: password,
+        email: email,
+        shopaddress : shopaddress,
+        pincode : pincode,
+        spincode : spincode,
+        contact : contact,
+        utype : tripType,
+        stype : dropValue
+      })
+      .then(async (response) => {
+
+      })
+      .catch(async (err) => {
+
+      })
+    }
     navigate("/dashboard");
-  }
+  };
 
   return (
     <div className="register-parent d-flex">
@@ -36,21 +92,37 @@ function Register() {
             Already have an account?{" "}
             <span style={{ color: "#73A9DF" }}> Login </span>{" "}
           </Link>
-          <Link style={{display: "inline-block",textDecoration:'underline'}} to="/">Back to home</Link>
+          <Link
+            style={{ display: "inline-block", textDecoration: "underline" }}
+            to="/"
+          >
+            Back to home
+          </Link>
         </div>
       </div>
       <div id="form-section">
         <div id="form-body">
           <h2>Sign Up</h2>
-          <form onSubmit={onSubmitHandler} action="" className="">
+          <form onSubmit={onSubmitHandler} noValidate>
             <div className="one d-flex">
               <div className="first-half w-50 m-2">
                 <div className="mb-3">
                   <label className="form-label">Name</label>
                   <input
                     type="text"
+                    id="username"
+                    value={username}
+                    required
+                    onChange={(e) => {
+                      let value = e.target.value;
+
+                      value = value.replace(/[^A-Za-z]/gi, "");
+
+                      setusername(value);
+                    }}
                     className="form-control"
-                    placeholder="Abc Xyz"
+                    placeholder="Enter your name"
+                    name="username"
                   />
                 </div>
                 <div className="mb-3 position-relative">
@@ -68,12 +140,27 @@ function Register() {
                   <input
                     type={showPassword ? "text" : "password"}
                     className="form-control"
+                    id="password"
+                    placeholder="enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Contact Number</label>
                   <input
-                    type="text"
+                    type="phone"
+                    id="contact"
+                    value={contact}
+                    required
+                    onChange={(e) => {
+                      let value = e.target.value;
+                      let regexp = /^[0-9\b]+$/;
+                      if (value === "" || regexp.test(value)) {
+                        setContact(value);
+                      }
+                    }}
                     className="form-control"
                     placeholder="7893453214"
                   />
@@ -84,7 +171,7 @@ function Register() {
                   </div>
                   <div
                     onClick={() => {
-                      setTripType("Customer");
+                      setTripType("C");
                     }}
                     className="form-check form-check-inline"
                   >
@@ -94,7 +181,8 @@ function Register() {
                       name="tripType"
                       id="inlineRadio1"
                       value={tripType}
-                      checked={tripType === "Customer"}
+                      checked={tripType === "C"}
+                      readOnly
                     />
                     <label className="form-check-label" htmlFor="inlineRadio1">
                       Customer
@@ -102,7 +190,7 @@ function Register() {
                   </div>
                   <div
                     onClick={() => {
-                      setTripType("Shop/Business Owner");
+                      setTripType("S");
                     }}
                     className="form-check form-check-inline"
                   >
@@ -112,7 +200,8 @@ function Register() {
                       name="tripType"
                       id="inlineRadio2"
                       value={tripType}
-                      checked={tripType === "Shop/Business Owner"}
+                      checked={tripType === "S"}
+                      readOnly
                     />
                     <label className="form-check-label" htmlFor="inlineRadio2">
                       Shop/Business Owner
@@ -125,6 +214,10 @@ function Register() {
                   <label className="form-label">Email address</label>
                   <input
                     type="email"
+                    id="email"
+                    value={email}
+                    required
+                    onChange={(e) => setEmail(e.target.value)}
                     className="form-control"
                     placeholder="name@example.com"
                   />
@@ -143,13 +236,22 @@ function Register() {
                   </div>
                   <input
                     type={showCPassword ? "text" : "password"}
+                    id="confirmpassword"
+                    value={confirmPassword}
+                    required
+                    onChange={(e) => setconfirmPassword(e.target.value)}
                     className="form-control"
+                    placeholder="Confirm Password"
                   />
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Pin Code</label>
                   <input
                     type="text"
+                    id="pincode"
+                    value={pincode}
+                    required
+                    onChange={(e) => setpincode(e.target.value)}
                     className="form-control"
                     placeholder="928291"
                   />
@@ -158,7 +260,7 @@ function Register() {
             </div>
             <div
               style={{
-                display: tripType === "Shop/Business Owner" ? "flex" : "none",
+                display: tripType === "S" ? "flex" : "none",
               }}
               className="two"
             >
@@ -167,14 +269,22 @@ function Register() {
                   <label className="form-label">Shop name</label>
                   <input
                     type="text"
+                    id="shopname"
+                    value={shopname}
+                    onChange={(e) => setshopname(e.target.value)}
                     className="form-control"
                     placeholder="Abc Xyz"
+                    required
                   />
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Pin code</label>
                   <input
                     type="text"
+                    id="spincode"
+                    value={spincode}
+                    onChange={(e) => setspincode(e.target.value)}
+                    required
                     placeholder="928291"
                     className="form-control"
                   />
@@ -185,6 +295,10 @@ function Register() {
                   <label className="form-label">Shop address</label>
                   <input
                     type="text"
+                    id="shopaddress"
+                    value={shopaddress}
+                    required
+                    onChange={(e) => setshopaddress(e.target.value)}
                     className="form-control"
                     placeholder="Building no, Street no, city"
                   />
@@ -194,17 +308,26 @@ function Register() {
                   <select
                     className="form-select"
                     aria-label="Default select example"
+                    onChange={(e) => getDropvalue(e)}
                   >
-                    <option selected>Choose business type</option>
-                    <option value="1">Dental Clinic</option>
-                    <option value="2">Salon</option>
-                    <option value="3">Grocery Store</option>
-                    <option value="4">Spa</option>
+                    <option defaultValue>Choose business type</option>
+                    <option value="Dental Clinic">Dental Clinic</option>
+                    <option value="Salon">Salon</option>
+                    <option value="Grocery Store">Grocery Store</option>
+                    <option value="Tailor">Tailor</option>
                   </select>
                 </div>
               </div>
             </div>
-            <button type="submit" className="mb-4">Register</button>
+            <button type="submit" className="mb-4">
+              {loading ? (
+                <div className="spinner-border text-light" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              ) : (
+                "Register"
+              )}
+            </button>
           </form>
         </div>
       </div>

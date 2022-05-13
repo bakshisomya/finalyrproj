@@ -1,11 +1,28 @@
 import React, { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import "./Login.css";
+import instance from "../Common/Baseurl";
 
 function Login() {
+  const [loading, setloading] = useState(false);
   const [showPassword, setshowPassword] = useState(false);
+  const [email, setemail] = useState("")
+  const [password, setpassword] = useState("")
   const navigate = useNavigate();
-  const onSubmitHandler = ()=>{
+  const onSubmitHandler = (e)=>{
+    e.preventDefault();
+    setloading(true);
+      instance.post("/register", {
+        username:email,
+        password: password,
+      })
+      .then(async (response) => {
+
+      })
+      .catch(async (err) => {
+
+      })
+    
     navigate('/dashboard');
   }
   return (
@@ -35,6 +52,10 @@ function Login() {
               <label className="form-label">Email address</label>
               <input
                 type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setemail(e.target.value)}
+                required
                 className="form-control"
                 placeholder="name@example.com"
               />
@@ -54,6 +75,10 @@ function Login() {
               <input
                 type={showPassword ? "text" : "password"}
                 className="form-control"
+                name="password"
+                value={password}
+                onChange={(e) => setpassword(e.target.value)}
+                required
               />
             </div>
             <div className="form-check mb-5">
@@ -67,7 +92,15 @@ function Login() {
                 Keep me signed in
               </label>
             </div>
-            <button type="submit" className="mb-5">Log In</button>
+            <button type="submit" className="mb-5">
+              {loading ? (
+                <div className="spinner-border text-light" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              ) : (
+                "Log In"
+              )}
+            </button>
             <Link to="/register">
               Don't have an account?{" "}
               <span style={{ color: "#73A9DF" }}> Signup </span>{" "}
